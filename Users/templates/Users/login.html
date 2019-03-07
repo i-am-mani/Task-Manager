@@ -1,0 +1,48 @@
+
+
+    {% extends "Main/base.html" %}
+
+    {% block content %}
+
+        <div class="content-section">
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <fieldset class="form-group">
+
+                    <legend class="border-bottom mb-4">Log In</legend>
+                    
+                    {% for field in form %}
+                        <div class="form-group">
+                          <label for="{{field.label}}">{{field.label}}</label>
+                          <input type="text"  name="{{field.html_name}}" id="{{field.id_for_label}}" class="form-control" placeholder="Enter {{field.label}}" aria-describedby="helpId">
+                          <small id="helpId" class="text-muted">{{field.help_text}}</small>
+                          {{field.errors}}
+                        </div>
+                    {% endfor %}
+
+                </fieldset>
+
+                <div class="form-group">
+
+                    <button class="btn btn-outline-info" type="submit">Login</button>
+
+                </div>
+
+            </form>
+
+            <div class="border-top pt-3">
+
+                <small class="text-muted">
+
+                    Need An Account? <a class="ml-2" href="{% url 'register' %}">Sign Up Now</a>
+
+                </small>
+
+            </div>
+
+        </div>
+
+    {% endblock content %}

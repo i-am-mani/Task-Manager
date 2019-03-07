@@ -1,0 +1,89 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+	 crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+	 crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+	 crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+	 crossorigin="anonymous"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.js"></script>
+	<link rel="stylesheet" href={% static "css/base.css" %}>
+	<!-- <script src={% static 'jsScripts/base.js' %}></script> -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+</head>
+
+<body class="bg-white">
+
+	<div class=" jumbotron jumbotron-fluid  bg-dark  shadow">
+		<div class="container" style="color:azure;">
+			<h1 class="display-3 ">Task Manager</h1>
+			<p class="lead">Your one stop solution to all the problems</p>
+		</div>
+    </div>
+
+    <!-- NavBar,for menue's -->
+    <nav class="navbar navbar-expand-md  bg-dark col-8" style = "margin-left:15%">
+        <i class="fa fa-tasks fa-2x" aria-hidden="true" style="color: whitesmoke"></i>
+        <button class="navbar-toggler ml-auto bg-primary" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="w-100 d-flex-column">
+            <div class="collapse navbar-collapse mx-auto w-100 justify-content-center" id="navbarNavAltMarkup" >
+                <div class="navbar-nav " id = "navList">
+                    <a class="nav-item nav-link active btn " href="#">
+                        <i class="fa fa-home fa-1x" aria-hidden="true"></i>Home
+                    </a>
+                    {% if user.is_authenticated %}
+                    <a class="nav-item nav-link btn" href="#">
+                        Profile
+                    </a>
+                    <a class="nav-item nav-link btn" href="#">
+                        Tasks
+                    </a>
+                    <a class="nav-item nav-link btn" href="#">
+                        Teams
+                    </a>
+                    <a class="nav-item nav-link btn" href="{% url 'logout' %}">
+                        Logout
+                    </a>
+                    {% else %}
+                    <a href={% url 'login' %} class="nav-item nav-link btn">
+                        <i class="fa fa-lock-open" aria-hidden="true"></i> Login
+                    </a>
+                    <a href={% url 'register' %} class="nav-item nav-link btn">
+                        <i class="fa fa-key" aria-hidden="true"></i> Register
+                    </a>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+
+	<main>
+		<div class="containerForCard ">
+			<div class="row">
+				<div class="wrapper offset-1 col-10 mt-5">
+					<div class="card h-100" id="MainCard">
+                        <div class="card-body ">
+                            <!-- <h2 >Welcome to Task Manager</h2> -->
+                            {% block content %}
+                            {% endblock%}
+                        </div>
+					</div>
+				</div>
+			
+			</div>
+		</div>
+	</main>
+
+</html>

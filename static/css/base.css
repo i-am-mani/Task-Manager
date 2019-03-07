@@ -1,0 +1,13 @@
+#navList a{
+    color:white;
+    
+}
+
+.help-text{
+    list-style-position: outside;
+    list-style-type:square ;
+}
+
+#MainCard{
+    padding-left: 8%;
+}

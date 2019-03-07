@@ -1,0 +1,30 @@
+
+{% extends "Main/base.html" %}
+
+{% block content %}
+<i class="fas fa-pen  fa-3x border-bottom pb-3" style="margin-left:35%;margin-bottom: 5%">Register</i>
+<form method="post">
+    {% csrf_token %}
+    <div class="fieldWrapper">
+        {% for field in form %}
+        <div class="form-group row">
+            <div class="col-2 ">
+                
+                {{ field.label_tag }}
+            </div>
+            <div class="col-8">
+                {{ field }}
+            </div>
+            <small class="text-muted">
+                {% if field.help_text %}
+                <p class="help">{{ field.help_text|safe }}</p>
+                {% endif %}
+            </small>
+            {{ field.errors }}
+        </div>
+        {% endfor %}
+    </div>
+    <button class="btn btn-outline-info offset-5" type="submit">Sign Up</button>
+</form>
+
+{% endblock %}
