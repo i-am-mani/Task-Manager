@@ -16,7 +16,7 @@
 	 crossorigin="anonymous"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.js"></script>
 	<link rel="stylesheet" href="{% static "css/base.css" %}">
-	<!-- <script src={% static 'jsScripts/base.js' %}></script> -->
+	<script src={% static 'js/base.js' %}></script>
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 </head>
 
@@ -38,14 +38,14 @@
         <div class="w-100 d-flex-column">
             <div class="collapse navbar-collapse mx-auto w-100 justify-content-center" id="navbarNavAltMarkup" >
                 <div class="navbar-nav " id = "navList">
-                    <a class="nav-item nav-link active btn " href="#">
+                    <a class="nav-item nav-link active btn " href="{% url 'home' %}">
                         <i class="fa fa-home fa-1x" aria-hidden="true"></i>Home
                     </a>
                     {% if user.is_authenticated %}
                     <a class="nav-item nav-link btn" href="#">
                         Profile
                     </a>
-                    <a class="nav-item nav-link btn" href="{% url 'userTasks' %}">
+                    <a class="nav-item nav-link btn" href="{% url 'create_tasks' %}">
                         Tasks
                     </a>
                     <a class="nav-item nav-link btn" href="#">

@@ -1,0 +1,16 @@
+{% extends 'Main/tasks.html' %}
+{% block task_page %}
+<!-- Creating new tasks -->
+    <div class="tab-pane fade show active" id="nav-new-task" role="tabpanel" aria-labelledby="nav-new-task-tab">
+        <div class="title">
+            <legend class="border-bottom p-2">Create New Task</legend>
+        </div>
+        <div class="taskform mt-5">
+          <form method="post">
+            {% csrf_token %}
+            {{form.as_p}}
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+    </div>
+{% endblock %}

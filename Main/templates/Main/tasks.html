@@ -1,31 +1,29 @@
 {% extends 'Main/base.html' %}
 {% block content %}
-<nav>
-    <div class="nav nav-tabs" id="nav-tab" role="tablist">
-      <a class="nav-item nav-link active" id="nav-new-task-tab" data-toggle="tab" href="#nav-new-task" role="tab" aria-controls="nav-new-task" aria-selected="true">New Task</a>
-      <a class="nav-item nav-link" id="nav-view-task-tab" data-toggle="tab" href="#nav-view-task" role="tab" aria-controls="nav-view-task" aria-selected="false">View Task</a>
-      <a class="nav-item nav-link" id="nav-edit-task-tab" data-toggle="tab" href="#nav-edit-task" role="tab" aria-controls="nav-edit-task" aria-selected="false">Edit Tasks</a>
-    </div>
-  </nav>
-  <div class="tab-content" id="nav-tabContent">
-    <div class="tab-pane fade show active" id="nav-new-task" role="tabpanel" aria-labelledby="nav-new-task-tab">
-        <div class="title">
-            <legend class="border-bottom p-2">Create New Task</legend>
-        </div>
-        <div class="taskform mt-5">
-          <form method="post">
-            {% csrf_token %}
-            {{form.as_p}}
-            <button type="submit" class="btn btn-primary">Submit</button>
-          </form>
 
-        </div>
-    </div>
-    <div class="tab-pane fade" id="nav-view-task" role="tabpanel" aria-labelledby="nav-view-task-tab">
+<div class="sidebar">
 
-    </div>
-    <div class="tab-pane fade" id="nav-edit-task" role="tabpanel" aria-labelledby="nav-edit-task-tab">
-        
-    </div>
+  <div id="t-button">
+    <i class="fas fa-door-open fa-2x" id="door"></i>
   </div>
+
+  <div class="list-group navList shadow">
+    <a href="{% url 'create_tasks' %}" class="list-group-item list-group-item-action active" id="create_tasks">
+      <i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i>
+      <span class="button-text"> Create a New Task </span>
+    </a>
+
+    <a href="{% url 'view_tasks' %}" class="list-group-item list-group-item-action" id="view_tasks">
+      <i class="fa fa-list-ol fa-2x" aria-hidden="true"></i>
+      <span class="button-text">View Tasks</span>
+    </a>
+  </div>
+</div>
+
+  {% block task_page %}
+
   {% endblock %}
+
+
+
+{% endblock %}

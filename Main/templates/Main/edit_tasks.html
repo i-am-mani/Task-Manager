@@ -1,0 +1,20 @@
+
+{% extends "Main/tasks.html" %}
+
+{% block task_page %}
+
+<form method="POST">
+
+    <legend class="border-bottom p-3">
+        Edit Task
+    </legend>
+
+    <form method="post">
+        {% csrf_token %}
+        {{form.as_p}}
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+</form>
+
+{% endblock %}

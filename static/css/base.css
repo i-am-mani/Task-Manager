@@ -11,3 +11,17 @@
 #MainCard{
     padding-left: 8%;
 }
+
+
+.navList{
+    margin-top:10px;
+    margin-left:0px;
+    width:250px;
+}
+
+.sidebar{
+    position: absolute;
+    left: 0%;
+    z-index: 100;
+    opacity: 0.5;
+  }
