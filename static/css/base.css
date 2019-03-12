@@ -25,3 +25,15 @@
     z-index: 100;
     opacity: 0.5;
   }
+
+  .left-icon{
+    position:absolute;
+    right:10%;
+  }
+  
+  .left-icon-text{
+    white-space: nowrap;
+    font-size: 17px;
+    position: absolute;
+    top: 43%;
+  }
