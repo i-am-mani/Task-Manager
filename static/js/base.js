@@ -36,6 +36,9 @@ $(document).ready(function () {
       $('#create_tasks').addClass('active');
     }
 
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
 
     $(".markTaskFinished").click(function(){
       console.log("hello")
