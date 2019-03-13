@@ -14,7 +14,7 @@
 	 crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
 	 crossorigin="anonymous"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.js"></script>
+     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 	<link rel="stylesheet" href="{% static "css/base.css" %}">
 	<script src={% static 'js/base.js' %}></script>
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
@@ -48,7 +48,7 @@
                     <a class="nav-item nav-link btn" href="{% url 'create_tasks' %}">
                         Tasks
                     </a>
-                    <a class="nav-item nav-link btn" href="{% url 'teams' %}">
+                    <a class="nav-item nav-link btn" href="{% url 'teams' 'home' %}?option=home">
                         Teams
                     </a>
                     <a class="nav-item nav-link btn" href="{% url 'logout' %}">
@@ -73,7 +73,7 @@
 		<div class="containerForCard ">
 			<div class="row">
 				<div class="wrapper offset-1 col-10 mt-5">
-					<div class="card h-100" id="MainCard">
+					<div class="card" id="MainCard">
                         <div class="card-body ">
                             <!-- <h2 >Welcome to Task Manager</h2> -->
                             {% block content %}
