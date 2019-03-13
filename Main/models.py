@@ -5,9 +5,11 @@ from django.conf import settings
 
 class Team(models.Model):
     creator = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name='creator')
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200,unique=True)
+    description = models.CharField(max_length=3000,null=True)
     members = models.ManyToManyField(settings.AUTH_USER_MODEL)
     date_of_creation = models.DateField(auto_now=True)
+
 
 class UserTasks(models.Model):
     PLANNED='planned'
