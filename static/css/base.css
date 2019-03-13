@@ -10,8 +10,13 @@
 
 #MainCard{
     padding-left: 8%;
+    min-height: 600px;
 }
 
+
+.containerForCard{
+    height: 600px;
+}
 
 .navList{
     margin-top:10px;
@@ -30,10 +35,6 @@
     position:absolute;
     right:10%;
   }
-  
-  .left-icon-text{
-    white-space: nowrap;
-    font-size: 17px;
-    position: absolute;
-    top: 43%;
-  }
+ 
+
+
