@@ -52,6 +52,31 @@
 
 {% elif title|lower == "description" %}
 
+<h3 class="display-5 border-bottom d-flex justify-content-center p-4">
+    {{title}}
+</h3>
+
+<div class="card border-secondary" style="margin-top:40px;">
+        <div class="card-body">
+          <h4 class="card-title">Team Info</h4>
+          <div class="card-text">
+              <ul class="list-group">
+                <li class="list-group-item">
+                  <p>Name : {{selected_team}}
+                </li>
+                <li class="list-group-item">
+                  Description : {{team_desc.team_description}}
+                </li>
+                <li class="list-group-item">
+                  Member count :{{team_desc.mem_count}}
+                </li>
+                <li class="list-group-item">
+                  Task count :  {{team_desc.ts_count}}
+                </li>            
+                </ul>
+          </div>
+        </div>
+      </div>
 
 {% elif title|lower == "tasks" %}
 
@@ -84,7 +109,7 @@
                       {% endif %}
                     </button>
                     <!-- Task Finished Button -->
-                    <a href="#" class="markTaskFinished" >
+                    <a href="{% url 'markTaskComplete'%}?pk={{pk}}" class="markTaskFinished" >
                       <i class="fa fa-check fa-2x" aria-hidden="true" style="position: absolute;right:2%;" data-title = "{{ task.title }}"></i>
                     </a>
                     <!-- Task Finished Button -->
@@ -107,7 +132,8 @@
             </div>
         {% endfor %}
     </div>
-    
+
+ 
     
     <!-- add task Modal -->
     <div class="modal fade" id="addMemberModal" tabindex="-1" role="dialog">
@@ -131,6 +157,9 @@
     </div>
     
     </div>
+
+
+
 
 {% endif %}
 {% endblock %}
