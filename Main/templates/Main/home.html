@@ -1,0 +1,43 @@
+{% extends "Main/base.html" %}
+
+{% block content %}
+    <div class="home-title d-flex justify-content-center">
+        <h2 class="display-2">
+            <i class="fa fa-tasks" aria-hidden="true"></i>
+            Task Manager
+        </h2>
+    </div>
+    <div class="card-deck" style="margin-top: 6%;">
+        <div class="card border-dark">
+            
+            <div class="card-body">
+                <h4 class="card-title border-bottom border-dark">
+                    <i class="fa fa-user-circle" aria-hidden="true"></i> Personal
+                </h4>
+                <div class="card-text">
+                    <ul class="list-group">
+                            <li class="list-group-item ">Plan Tasks</li>
+                            <li class="list-group-item ">Create Tasks</li>
+                            <li class="list-group-item ">Track Tasks</li>
+                            <li class="list-group-item ">Get a complete histroy of tasks</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="card border-dark">
+            <div class="card-body">
+                <h4 class="card-title border-bottom border-dark">
+                    <i class="fas fa-user-cog "></i> Team
+                </h4>
+                <div class="card-text">
+                        <ul class="list-group">
+                                <li class="list-group-item ">Form Teams</li>
+                                <li class="list-group-item ">Add members to team</li>
+                                <li class="list-group-item ">Work in Colaboration with other Members</li>
+                                <li class="list-group-item ">Plan Tasks and Assign them to different members</li>
+                        </ul>
+                    </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
