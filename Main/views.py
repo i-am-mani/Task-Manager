@@ -3,8 +3,9 @@ from .models import Team,UserTasks
 from .forms import TaskCreatationForm,TeamCreatationForm,AddUserToTeam,TeamTaskCreationForm
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.db import models
 def home(request):
-    return render(request,"Main/base.html")
+    return render(request,"Main/home.html")
 def CreateTasks(request):
     if request.method =='POST':
         form = TaskCreatationForm(request.POST)
@@ -22,7 +23,8 @@ def ViewTasks(request):
     tasksDescription = getTaskInfo(request,assignee=request.user)
     return render(request,'Main/view_tasks.html',{"tasks":tasksDescription})
 
-def getTaskInfo(request,assigner = None,assignee = None): #assigner is the Team object and assignee is user object
+def getTaskInfo(request,assigner = None,assignee = None):
+    #assigner is the Team object and assignee is user object
     #returns task's info(tile,desc,status,pk) related to assignee
     tasksDescription = {} #stores primary key as Key of dict,and task's title,dsc,status in form of dictionary as Value
     if assigner == None:
@@ -55,25 +57,31 @@ def EditTasks(request):
     return render(request,'Main/edit_tasks.html',{'form':editTaskForm})
 
 def taskStatus(request):
-    task_title = request.GET['task_title']
-    task = UserTasks.objects.get(task_assignee=request.user,task_title=task_title)
+    task_pk = request.GET.get('pk')
+    task = UserTasks.objects.get(pk=task_pk)
     task.task_status = 'done'
     task.save() 
-    return HttpResponse("done")
+    messages.success(request,"The Task has been marked as complete!")
+    return ViewTasks(request)
 
 def teams(request,team_name):
-    team_info,unfinished_tasks,form = team_home(request)
+    team_info,form = team_home(request)
     option = request.GET.get("option","")
     team_description = {}
     team_members = {}
     team_tasks = {}
     add_member_form = {}
     add_task_form = {}
+    team_desc = {}
 
     if team_name!='home':
         team = Team.objects.get(name = team_name)
         if option == "description":
             team_description = team.description
+            mem_count = team.members.all().count()
+            ts_count = UserTasks.objects.filter(task_assigner = team).count()
+            team_desc = {"team_description":team_description,"mem_count":mem_count,"ts_count":ts_count}
+            
         elif option == "tasks":
             team_tasks = getTaskInfo(request,assigner=team)
             add_task_form = add_task_from_team(request,team)
@@ -83,16 +91,20 @@ def teams(request,team_name):
             for member in members:
                 team_members[member.pk] = member.username
             add_member_form = add_member_to_team(request,team)
-    context = {"teams":team_info,
-            "form":form,
-            "title":option.capitalize(),
-            "unfinished_tasks":unfinished_tasks,
-            "main_description":team_description,
-            "team_tasks":team_tasks,
-            "team_members":team_members,
-            "add_member_form":add_member_form,
-            "selected_team":team_name,
-            "add_task_form":add_task_form}
+        
+
+
+    context = {
+            "teams":team_info, #consist of all team's name,desc,unfinished tasks
+            "form":form, #Form for creating new Team 
+            "title":option.capitalize(), #Selected option for a specific team
+            "team_tasks":team_tasks, #dictionary of all tasks belonging to a team
+            "team_members":team_members, #member list of the team
+            "add_member_form":add_member_form, # For for adding new member to team
+            "selected_team":team_name, #Selected team's name
+            "add_task_form":add_task_form, # Form for creating new Task
+            "team_desc":team_desc  #Consists of Teams description,consits of selected team's description,member and task count 
+            }
     return render(request,"Main/team_content.html",context)
 
 def team_home(request):
@@ -119,7 +131,7 @@ def team_home(request):
             messages.success(request,"Team has been successfully created")
     else:        
         form = TeamCreatationForm(prefix="teamCreationForm")
-    return team_info,unfinished_tasks,form
+    return team_info,form
 
 def add_member_to_team(request,team):
 
@@ -155,4 +167,21 @@ def add_task_from_team(request,team):
     return form
 
 
-            
+def profile(request):
+    user_profile = {}
+    user = request.user
+
+    user_profile["Username"] = request.user.username
+    user_profile["First Name"] = request.user.first_name
+    user_profile["Last Name"] = request.user.last_name
+    user_profile["Email"] = request.user.email
+
+    team_db = request.user.team_set.all()
+    team_db_creator = request.user.creator.all()
+    user_teams = {}
+    for team in team_db:
+        user_teams[team.name] = "member"
+    for team in team_db_creator:
+        user_teams[team.name] = "creator"
+    print(user_teams)
+    return render(request,"Main/profile.html",{"user_profile":user_profile,"user_teams":user_teams})
