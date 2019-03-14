@@ -8,7 +8,7 @@
   </div>
 
   <div class="list-group navList shadow">
-    <a href="{% url 'create_tasks' %}" class="list-group-item list-group-item-action active" id="create_tasks">
+    <a href="{% url 'create_tasks' %}" class="list-group-item list-group-item-action" id="create_tasks">
       <i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i>
       <span class="button-text"> Create a New Task </span>
     </a>
@@ -19,6 +19,18 @@
     </a>
   </div>
 </div>
+
+<!-- Notifcation Message -->
+  {% if messages %}
+  {% for message in messages %} 
+      <div class="alert alert-{% if message.tags == "error" %}danger {% else %}{{ message.tags }} {% endif %} alert-dismissible fade show" role="alert" >
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+          </button>
+          <strong>{{message}}</strong> 
+      </div>
+  {% endfor %}
+  {% endif %}
 
   {% block task_page %}
 
