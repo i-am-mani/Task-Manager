@@ -1,0 +1,136 @@
+{% extends 'Main/teams.html' %}
+
+{% block team_content %}
+
+{% if title|lower == "members" %}
+
+<!-- Member Page Title -->
+<div class="card-title d-flex justify-content-center">
+    <h4 class="display-5 border-bottom">
+        {{title}}
+        <a type="button" data-toggle="modal" data-target="#addMemberModal">
+            <i class="fa fa-user-plus fa-2x" aria-hidden="true" style="right:4%;position: absolute;top:1%;"></i>
+        </a>
+    </h4>
+</div>
+
+<div class="card-text"> 
+
+<!-- Member List -->
+<div class="list-group border-top" style="margin-top:5%;padding-top: 5%">
+    {% for pk,member_name in team_members.items %}
+        <a href="#" class="list-group-item list-group-item-action">
+            <i class="fa fa-user-circle fa-2x" aria-hidden="true"></i>
+           <strong style="margin-left: 2%;margin-right: 10%;">{{member_name}}</strong>
+        </a>
+    {% endfor %}
+</div>
+
+
+<!-- add Member Modal -->
+<div class="modal fade" id="addMemberModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add new Member</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <div class="modal-body">
+                <form method="post">
+                        {% csrf_token %}
+                        {{ add_member_form.as_p }}
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+
+{% elif title|lower == "description" %}
+
+
+{% elif title|lower == "tasks" %}
+
+
+<!-- Tasks Page Title -->
+<div class="card-title d-flex justify-content-center">
+        <h4 class="display-5 border-bottom">
+            {{title}}
+            <a type="button" data-toggle="modal" data-target="#addMemberModal">
+                <i class="far fa-plus-square fa-2x" aria-hidden="true" style="right:4%;position: absolute;top:1%;"></i>
+            </a>
+        </h4>
+    </div>
+    
+    <div class="card-text"> 
+    
+    <!-- Tasks List -->
+    <div class="list-group border-top" style="margin-top:5%;padding-top: 5%">
+        <div class="accordion" id="accordionExample">
+        {% for pk,task in team_tasks.items %}
+        <div class="card">
+                <div class="card-header bg-white" id="heading_{{ forloop.counter }}">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse_{{ forloop.counter }}" id="title_btn">
+                      {{task.title}}
+                      {% if task.status == "done" %}
+                        <i class="fa fa-circle fa-1x mx-4 status-cricle" aria-hidden="true" style="color:green;"></i>
+                      {% else %}
+                        <i class="fa fa-circle fa-1x mx-4 status-cricle" aria-hidden="true" style="color: rgb(223, 226, 27)"></i>
+                      {% endif %}
+                    </button>
+                    <!-- Task Finished Button -->
+                    <a href="#" class="markTaskFinished" >
+                      <i class="fa fa-check fa-2x" aria-hidden="true" style="position: absolute;right:2%;" data-title = "{{ task.title }}"></i>
+                    </a>
+                    <!-- Task Finished Button -->
+                      
+                  <!-- Task Edit Button -->
+                  <a href="{% url 'edit_tasks' %}?pk={{pk}}" id="editTask">
+                    <i class="fas fa-edit fa-2x"  style="position: absolute; right:10%;"></i>
+                  </a>
+                  <!-- Task Edit Button -->
+                  </h5>
+      
+                </div>
+            
+                <div id="collapse_{{ forloop.counter }}" class="collapse" data-parent="#accordionExample">
+                  <div class="card-body bg-light">
+                    {{task.description}}
+                  </div>
+                </div>
+              </div>
+            </div>
+        {% endfor %}
+    </div>
+    
+    
+    <!-- add task Modal -->
+    <div class="modal fade" id="addMemberModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add new task</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post">
+                            {% csrf_token %}
+                            {{ add_task_form.as_p }}
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    </div>
+
+{% endif %}
+{% endblock %}
