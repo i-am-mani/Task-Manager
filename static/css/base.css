@@ -38,3 +38,12 @@
  
 
 
+.profile-content{
+    font-weight: bold;
+    border: solid 3px gray;
+    padding:40px;
+}
+
+.profile_label{
+    margin-bottom: 3%;
+}

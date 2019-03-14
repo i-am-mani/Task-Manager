@@ -29,7 +29,7 @@ urlpatterns = [
     path('CreateTasks/',mainView.CreateTasks,name="create_tasks"),
     path('ViewTasks/',mainView.ViewTasks,name = "view_tasks"), 
     path('EditTasks',mainView.EditTasks,name="edit_tasks"),
-    path('markTaskFinished/',mainView.taskStatus),
-    path('teams/<str:team_name>',mainView.teams,name='teams')
-    
+    path('markTaskFinished/',mainView.taskStatus,name="markTaskComplete"),
+    path('teams/<str:team_name>',mainView.teams,name='teams'),
+    path('profile/',mainView.profile,name='profile')    
 ]
