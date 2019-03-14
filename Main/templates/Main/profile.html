@@ -1,0 +1,42 @@
+
+{% extends "Main/base.html" %}
+
+{% block content %}
+<div class="card-title">
+<h1 class="display-4 offset-3" style="padding-left:90px">Profile</h1>
+</div>
+<div class="card main offset-1 col-8">
+  <div class="card-title d-flex justify-content-center">
+  <i class="fa fa-user-circle fa-5x" aria-hidden="true"></i>
+  </div>
+  <div class="card-body">
+    <div class="profile-content">
+        {% for label,value in user_profile.items %}
+        <div class="row profile_label border-bottom p-3">
+            <div class="col-3">{{label}}</div>
+            <div class="col-9">{{value}}</div>
+        </div>
+        {% endfor %}
+
+        <div class="team row">
+
+            <div class="label col-3">
+                Teams
+            </div>
+            <div class="value col-9">
+            
+                {% for name,membership in user_teams.items %}
+                   <p> {{name}}
+                    {% if membership|lower == "member" %}
+                        <span class="badge badge-pill badge-primary">M</span>
+                    {% elif membership|lower == "creator" %}
+                        <span class="badge badge-pill badge-primary">C</span>
+                    {% endif %} 
+                    </p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
