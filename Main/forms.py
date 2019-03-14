@@ -1,6 +1,7 @@
 from django.db import models
 from django import forms
 from .models import Team,UserTasks
+from django.contrib.auth.models import User
 
 
 class TaskCreatationForm(forms.ModelForm):
@@ -27,3 +28,8 @@ class TeamCreatationForm(forms.ModelForm):
         model = Team
         fields = ['name','description']
 
+class AddUserToTeam(forms.Form):
+    member_username = forms.CharField(label="Member Username",widget=forms.TextInput(attrs={'class':'form-control','placeholder':'Enter Username of the member you wish to add'}))
+
+class TeamTaskCreationForm(TaskCreatationForm):
+    assignee = forms.CharField(label="Assignee",widget=forms.TextInput(attrs={"class":'form-control','placeholder':'Assign the task to ?'}))
