@@ -21,31 +21,31 @@
 </head>
 
 <body class="bg-white">
-
-	<div class=" jumbotron jumbotron-fluid  bg-dark  shadow">
-		<div class="container" style="color:azure;">
-			<h1 class="display-3 ">Task Manager</h1>
-			<p class="lead">Your one stop solution to all the problems</p>
-		</div>
-    </div>
-
-    <!-- NavBar,for menue's -->
-    <nav class="navbar navbar-expand-md  bg-dark col-8" style = "margin-left:15%">
-        <i class="fa fa-tasks fa-2x" aria-hidden="true" style="color: whitesmoke"></i>
-        <button class="navbar-toggler ml-auto bg-primary" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="w-100 d-flex-column">
-            <div class="collapse navbar-collapse mx-auto w-100 justify-content-center" id="navbarNavAltMarkup" >
-                <div class="navbar-nav " id = "navList">
+    
+    <div class=" jumbotron jumbotron-fluid  bg-dark  shadow">
+        <div class="container" style="color:azure;">
+                <h1 class="display-3 ">Task Manager</h1>
+                <p class="lead">Your one stop solution to all the problems</p>
+            </div>
+        </div>
+        
+        <!-- NavBar,for menue's -->
+        <nav class="navbar navbar-expand-md  bg-dark col-8" style = "margin-left:15%">
+                <i class="fa fa-tasks fa-2x" aria-hidden="true" style="color: whitesmoke"></i>
+                <button class="navbar-toggler ml-auto bg-primary" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="w-100 d-flex-column">
+                    <div class="collapse navbar-collapse mx-auto w-100 justify-content-center" id="navbarNavAltMarkup" >
+                        <div class="navbar-nav " id = "navList">
                     <a class="nav-item nav-link active btn " href="{% url 'home' %}">
                         <i class="fa fa-home fa-1x" aria-hidden="true"></i>Home
                     </a>
                     {% if user.is_authenticated %}
-                    <a class="nav-item nav-link btn" href="#">
+                    <a class="nav-item nav-link btn" href=" {% url 'profile' %}">
                         Profile
                     </a>
-                    <a class="nav-item nav-link btn" href="{% url 'create_tasks' %}">
+                    <a class="nav-item nav-link btn" href="{% url 'view_tasks' %}">
                         Tasks
                     </a>
                     <a class="nav-item nav-link btn" href="{% url 'teams' 'home' %}?option=home">
@@ -62,18 +62,17 @@
                         <i class="fa fa-key" aria-hidden="true"></i> Register
                     </a>
                     {% endif %}
-
+                    
                 </div>
             </div>
         </div>
     </nav>
     
-
 	<main>
-		<div class="containerForCard ">
-			<div class="row">
-				<div class="wrapper offset-1 col-10 mt-5">
-					<div class="card" id="MainCard">
+        <div class="containerForCard ">
+            <div class="row">
+                <div class="wrapper offset-1 col-10 mt-5">
+                    <div class="card" id="MainCard">
                         <div class="card-body ">
                             <!-- <h2 >Welcome to Task Manager</h2> -->
                             {% block content %}
