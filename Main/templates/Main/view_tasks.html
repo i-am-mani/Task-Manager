@@ -7,7 +7,7 @@
     {% for pk,task in tasks.items %}
         
         <div class="card">
-          <div class="card-header" id="heading_{{ forloop.counter }}">
+          <div class="card-header bg-white" id="heading_{{ forloop.counter }}">
             <h5 class="mb-0">
               <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse_{{ forloop.counter }}" id="title_btn">
                 {{task.title}}
@@ -18,7 +18,7 @@
                 {% endif %}
               </button>
               <!-- Task Finished Button -->
-              <a href="#" class="markTaskFinished" >
+              <a href="{% url 'markTaskComplete' %}?pk={{pk}}" class="markTaskFinished" >
                 <i class="fa fa-check fa-2x" aria-hidden="true" style="position: absolute;right:2%;" data-title = "{{ task.title }}"></i>
               </a>
               <!-- Task Finished Button -->
@@ -33,7 +33,7 @@
           </div>
       
           <div id="collapse_{{ forloop.counter }}" class="collapse" data-parent="#accordionExample">
-            <div class="card-body">
+            <div class="card-body bg-light">
               {{task.description}}
             </div>
           </div>
