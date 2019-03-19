@@ -4,8 +4,11 @@ from .forms import TaskCreatationForm,TeamCreatationForm,AddUserToTeam,TeamTaskC
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.db import models
+from django.contrib.auth.decorators import login_required
 def home(request):
     return render(request,"Main/home.html")
+
+@login_required()
 def CreateTasks(request):
     if request.method =='POST':
         form = TaskCreatationForm(request.POST)
@@ -19,9 +22,11 @@ def CreateTasks(request):
         form = TaskCreatationForm()
     return render(request,"Main/create_tasks.html",{'form':form})
 
+@login_required()
 def ViewTasks(request):
     tasksDescription = getTaskInfo(request,assignee=request.user)
     return render(request,'Main/view_tasks.html',{"tasks":tasksDescription})
+
 
 def getTaskInfo(request,assigner = None,assignee = None):
     #assigner is the Team object and assignee is user object
@@ -42,8 +47,8 @@ def getTaskInfo(request,assigner = None,assignee = None):
         tasksDescription[task.pk] = tempDict
     return tasksDescription
 
+@login_required()
 def EditTasks(request):
-
     _pk = request.GET.get('pk')
     task = UserTasks.objects.get(pk= _pk)
     editTaskForm = TaskCreatationForm(instance = task)
@@ -64,6 +69,7 @@ def taskStatus(request):
     messages.success(request,"The Task has been marked as complete!")
     return ViewTasks(request)
 
+@login_required()
 def teams(request,team_name):
     team_info,form = team_home(request)
     option = request.GET.get("option","")
@@ -92,8 +98,6 @@ def teams(request,team_name):
                 team_members[member.pk] = member.username
             add_member_form = add_member_to_team(request,team)
         
-
-
     context = {
             "teams":team_info, #consist of all team's name,desc,unfinished tasks
             "form":form, #Form for creating new Team 
@@ -106,6 +110,7 @@ def teams(request,team_name):
             "team_desc":team_desc  #Consists of Teams description,consits of selected team's description,member and task count 
             }
     return render(request,"Main/team_content.html",context)
+
 
 def team_home(request):
     #returns teams and unfinished tasks
@@ -166,7 +171,7 @@ def add_task_from_team(request,team):
         form = TeamTaskCreationForm(prefix="addTaskFromTeam")
     return form
 
-
+@login_required()
 def profile(request):
     user_profile = {}
     user = request.user
