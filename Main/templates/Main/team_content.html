@@ -47,8 +47,8 @@
         </div>
     </div>
 </div>
-
 </div>
+
 
 {% elif title|lower == "description" %}
 
@@ -80,6 +80,7 @@
 
 {% elif title|lower == "tasks" %}
 
+<!-- Tasks -->
 
 <!-- Tasks Page Title -->
 <div class="card-title d-flex justify-content-center">
@@ -95,7 +96,7 @@
     
     <!-- Tasks List -->
     <div class="list-group border-top" style="margin-top:5%;padding-top: 5%">
-        <div class="accordion" id="accordionExample">
+        <div class="accordion">
         {% for pk,task in team_tasks.items %}
         <div class="card">
                 <div class="card-header bg-white" id="heading_{{ forloop.counter }}">
