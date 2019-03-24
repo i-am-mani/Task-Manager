@@ -4,9 +4,9 @@ from .models import Team,UserTasks
 from django.contrib.auth.models import User
 
 
-class TaskCreatationForm(forms.ModelForm):
+class TaskCreationForm(forms.ModelForm):
     def __init__(self,*args,**kwargs):
-        super(TaskCreatationForm,self).__init__(*args,**kwargs)
+        super(TaskCreationForm,self).__init__(*args,**kwargs)
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
         self.fields['task_title'].widget.attrs.update({"class":"form-control","placeholder":"Enter Title for task"})
@@ -17,9 +17,9 @@ class TaskCreatationForm(forms.ModelForm):
         model = UserTasks
         fields =['task_title','task_description','task_comments']
 
-class TeamCreatationForm(forms.ModelForm):
+class TeamCreationForm(forms.ModelForm):
     def __init__(self,*args,**kwargs):
-        super(TeamCreatationForm,self).__init__(*args,**kwargs)
+        super(TeamCreationForm,self).__init__(*args,**kwargs)
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
         self.fields['name'].widget.attrs.update({"class":"form-control","placeholder":"Enter Name for Team"})
@@ -31,5 +31,5 @@ class TeamCreatationForm(forms.ModelForm):
 class AddUserToTeam(forms.Form):
     member_username = forms.CharField(label="Member Username",widget=forms.TextInput(attrs={'class':'form-control','placeholder':'Enter Username of the member you wish to add'}))
 
-class TeamTaskCreationForm(TaskCreatationForm):
+class TeamTaskCreationForm(TaskCreationForm):
     assignee = forms.CharField(label="Assignee",widget=forms.TextInput(attrs={"class":'form-control','placeholder':'Assign the task to ?'}))
