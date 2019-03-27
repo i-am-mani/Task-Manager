@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, HttpResponse, reverse
 from .models import Team, UserTasks
-from .forms import TaskCreatationForm, TeamCreatationForm, AddUserToTeam, TeamTaskCreationForm
+from .forms import (TeamCreationForm,TeamTaskCreationForm,TaskCreationForm,AddUserToTeam)
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.db import models
@@ -11,31 +11,35 @@ def home(request):
     return render(request, "Main/home.html")
 
 
-@login_required()
-def CreateTasks(request):
+def CreateUserTasks(request):
     """
         Render Task Creation view (for User Tasks).
     """
     if request.method == 'POST':
-        form = TaskCreatationForm(request.POST)
+        form = TaskCreationForm(request.POST)
         if form.is_valid():
             obj = form.save(commit=False)  # gets the model object, which is in memory but not saved in database yet. #https://stackoverflow.com/questions/12848605/django-modelform-what-is-savecommit-false-used-for
             obj.task_assignee = request.user  # make changes to the object before saving it, in this case we are assasigning assignee field to logged in user.
             obj.save()
-            form = TaskCreatationForm()
+            form = TaskCreationForm()
             return redirect(reverse("view_tasks"))
     else:
-        form = TaskCreatationForm()
-    return render(request, "Main/create_tasks.html",{'form':form})
+        form = TaskCreationForm()
+    return form
 
 
 @login_required()
-def ViewTasks(request):
+def ViewUserTasks(request):
     """
         View finished/unfinished tasks with their dscription and status.
     """
+    form = CreateUserTasks(request)
+
     tasksDescription = getTaskInfo(request, assignee=request.user)
-    return render(request, 'Main/view_tasks.html',{"tasks":tasksDescription})
+    context = {
+        "tasks":tasksDescription,
+        "form":form }
+    return render(request, 'Main/view_tasks.html',context)
 
 
 def getTaskInfo(request,assigner = None,assignee = None):
@@ -49,7 +53,7 @@ def getTaskInfo(request,assigner = None,assignee = None):
             assigner(Team):Team object of the Assigner
             assignee(User):The User to which the Task is to be Assigned
         Return:
-            task_description(Dictionary)
+            task_description(Dictionary):{pk:{title:"__",dsc:"__",status:"__"}}
 
     """
     tasksDescription = {} #stores primary key as Key of Task,and task's title,dsc,status in form of dictionary as Value
@@ -65,6 +69,8 @@ def getTaskInfo(request,assigner = None,assignee = None):
         tempDict['title'] = title
         tempDict['description'] = desc
         tempDict['status'] = status
+
+        
 
         tasksDescription[task.pk] = tempDict
 
@@ -84,10 +90,10 @@ def EditTasks(request):
     """
     _pk = request.GET.get('pk')
     task = UserTasks.objects.get(pk= _pk)
-    editTaskForm = TaskCreatationForm(instance = task)
+    editTaskForm = TaskCreationForm(instance = task)
 
     if( request.method == 'POST'):
-        editTaskForm = TaskCreatationForm(request.POST,instance = task)
+        editTaskForm = TaskCreationForm(request.POST,instance = task)
         if(editTaskForm.is_valid()):
             editTaskForm.save()
             messages.success("Task Has been edited Successfuly")
@@ -106,7 +112,7 @@ def task_mark_status_complete(request):
     task.task_status = 'done'
     task.save() 
     messages.success(request,"The Task has been marked as complete!")
-    return ViewTasks(request)
+    return ViewUserTasks(request)
 
 
 @login_required()
@@ -173,14 +179,14 @@ def team_home(request):
         _dict["unfinished_tasks"]=unfinished_tasks
         team_info[team.pk] = _dict
     if request.method == "POST":
-        form = TeamCreatationForm(request.POST,prefix="teamCreationForm")
+        form = TeamCreationForm(request.POST,prefix="teamCreationForm")
         if form.is_valid():
             db_instance = form_obj.save(commit=False)
             db_instance.creator = request.user
             db_instance.save()
             messages.success(request,"Team has been successfully created")
     else:        
-        form = TeamCreatationForm(prefix="teamCreationForm")
+        form = TeamCreationForm(prefix="teamCreationForm")
     return team_info,form
 
 def add_member_to_team(request,team):
@@ -220,6 +226,7 @@ def add_task_from_team(request,team):
         # Prefix is used to avoid POST data collision of different forms, since 
         # single request is used to process many Forms.
         form = TeamTaskCreationForm(request.POST,prefix = "addTaskFromTeam")
+        
         if(form.is_valid()):
             assignee = form.cleaned_data['assignee']
             # Get the Database object without commiting
@@ -234,6 +241,7 @@ def add_task_from_team(request,team):
                 messages.error(request,"The Assignee Usename is incorrect!")
     else:
         form = TeamTaskCreationForm(prefix="addTaskFromTeam")
+        print("form for task",form)
     return form
 
 @login_required()
