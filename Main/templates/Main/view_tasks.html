@@ -1,31 +1,39 @@
 {% extends 'Main/tasks.html' %}
 {% block task_page %}
 <div class="accordion" id="accordionExample">
-    <legend class="border-bottom m-4">
+  <div class="title-view-user-task">
+    <h4 class="border-bottom m-4" style="font-size: 40px;padding-bottom: 20px;">
       Tasks
-    </legend>
+    </h4>
+    <a type="button" data-toggle="modal" data-target="#new-user-task">
+        <i class="far fa-plus-square fa-3x" aria-hidden="true" style="right:8%;position: absolute;top:8%;">
+        <sup class="text-muted" style="font-size: 18px">Add new task</sup>
+        
+        </i>
+    </a>
+  </div> 
     {% for pk,task in tasks.items %}
         
         <div class="card">
-          <div class="card-header bg-white" id="heading_{{ forloop.counter }}">
+          <div class="card-header bg-light" id="heading_{{ forloop.counter }}">
             <h5 class="mb-0">
               <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse_{{ forloop.counter }}" id="title_btn">
                 {{task.title}}
                 {% if task.status == "done" %}
-                  <i class="fa fa-circle fa-1x mx-4 status-cricle" aria-hidden="true" style="color:green;"></i>
+                  <i class="fa fa-circle fa-1x mx-4 status-cricle" aria-hidden="true" style="color:green;" title="task completed"></i>
                 {% else %}
-                  <i class="fa fa-circle fa-1x mx-4 status-cricle" aria-hidden="true" style="color: rgb(223, 226, 27)"></i>
+                  <i class="fa fa-circle fa-1x mx-4 status-cricle" aria-hidden="true" style="color: rgb(223, 226, 27)" title="task in progress"></i>
                 {% endif %}
               </button>
               <!-- Task Finished Button -->
               <a href="{% url 'markTaskComplete' %}?pk={{pk}}" class="markTaskFinished" >
-                <i class="fa fa-check fa-2x" aria-hidden="true" style="position: absolute;right:2%;" data-title = "{{ task.title }}"></i>
+                <i class="fa fa-check fa-2x" aria-hidden="true" style="position: absolute;right:2%;" data-title = "{{ task.title }}" data-toggle="tooltip" title="mark task complete"></i>
               </a>
               <!-- Task Finished Button -->
                 
             <!-- Task Edit Button -->
             <a href="{% url 'edit_tasks' %}?pk={{pk}}" id="editTask">
-              <i class="fas fa-edit fa-2x"  style="position: absolute; right:10%;"></i>
+              <i class="fas fa-edit fa-2x"  style="position: absolute; right:10%;" title="Edit task" data-toggle="tooltip"></i>
             </a>
             <!-- Task Edit Button -->
             </h5>
@@ -33,12 +41,38 @@
           </div>
       
           <div id="collapse_{{ forloop.counter }}" class="collapse" data-parent="#accordionExample">
-            <div class="card-body bg-light">
-              {{task.description}}
+            <div class="card-body bg-white">
+              <h6 class="dsc-title text-muted border-bottom pb-1">Description</h6>
+              <div class="ml-4 " style="line-height:1.8">
+                  {{task.description|linebreaks}}
+              </div>
             </div>
           </div>
         </div>
     {% endfor %}
+    <!-- Modal -->
+    <div class="modal fade" id="new-user-task" tabindex="-1" role="dialog" aria-labelledby="new-user-task" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add new task</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+          <div class="modal-body">
+            <div class="container-fluid">
+                <form method="post">
+                    {% csrf_token %}
+                    {{form.as_p}}
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                  </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
 </div>
 
 {% endblock %}
