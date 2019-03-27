@@ -27,10 +27,9 @@ urlpatterns = [
     path('register/',userView.registerNewUser,name='register'),
     path('login/', LoginView.as_view(template_name='Users/login.html'), name='login'), #using Django's built in feature for Login
     path('logout/', LogoutView.as_view(template_name='Users/logout.html'), name='logout'), 
-    path('CreateTasks/',mainView.CreateTasks,name="create_tasks"),
-    path('ViewTasks/',mainView.ViewTasks,name = "view_tasks"), 
+    path('ViewUserTasks/',mainView.ViewUserTasks,name = "view_tasks"), 
     path('EditTasks',mainView.EditTasks,name="edit_tasks"),
-    path('markTaskFinished/',mainView.taskStatus,name="markTaskComplete"),
+    path('markTaskFinished/',mainView.task_mark_status_complete,name="markTaskComplete"),
     path('teams/<str:team_name>',mainView.teams,name='teams'),
     path('profile/',mainView.profile,name='profile')    
 ]
