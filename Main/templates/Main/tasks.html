@@ -1,25 +1,6 @@
 {% extends 'Main/base.html' %}
 {% block content %}
 
-<div class="sidebar">
-
-  <div id="t-button">
-    <i class="fas fa-door-open fa-2x" id="door"></i>
-  </div>
-
-  <div class="list-group navList shadow">
-    <a href="{% url 'create_tasks' %}" class="list-group-item list-group-item-action" id="create_tasks">
-      <i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i>
-      <span class="button-text"> Create a New Task </span>
-    </a>
-
-    <a href="{% url 'view_tasks' %}" class="list-group-item list-group-item-action" id="view_tasks">
-      <i class="fa fa-list-ol fa-2x" aria-hidden="true"></i>
-      <span class="button-text">View Tasks</span>
-    </a>
-  </div>
-</div>
-
 <!-- Notifcation Message -->
   {% if messages %}
   {% for message in messages %} 
