@@ -31,5 +31,5 @@ urlpatterns = [
     path('EditTasks',mainView.EditTasks,name="edit_tasks"),
     path('markTaskFinished/',mainView.task_mark_status_complete,name="markTaskComplete"),
     path('teams/<str:team_name>',mainView.teams,name='teams'),
-    path('profile/',mainView.profile,name='profile')    
+    path('profile/<str:user_name>',mainView.profile,name='profile')    
 ]
