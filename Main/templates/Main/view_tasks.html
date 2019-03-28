@@ -25,26 +25,62 @@
                   <i class="fa fa-circle fa-1x mx-4 status-cricle" aria-hidden="true" style="color: rgb(223, 226, 27)" title="task in progress"></i>
                 {% endif %}
               </button>
+              <!-- Assigned by -->
+              <span class="text-size-small text-muted">Assigned by </span>
+              <a href="{% url 'profile' task.assigner %}" class="text-size-small">
+                {{task.assigner}}
+              </a>
               <!-- Task Finished Button -->
               <a href="{% url 'markTaskComplete' %}?pk={{pk}}" class="markTaskFinished" >
                 <i class="fa fa-check fa-2x" aria-hidden="true" style="position: absolute;right:2%;" data-title = "{{ task.title }}" data-toggle="tooltip" title="mark task complete"></i>
               </a>
-              <!-- Task Finished Button -->
-                
             <!-- Task Edit Button -->
             <a href="{% url 'edit_tasks' %}?pk={{pk}}" id="editTask">
               <i class="fas fa-edit fa-2x"  style="position: absolute; right:10%;" title="Edit task" data-toggle="tooltip"></i>
             </a>
-            <!-- Task Edit Button -->
             </h5>
 
           </div>
       
           <div id="collapse_{{ forloop.counter }}" class="collapse" data-parent="#accordionExample">
             <div class="card-body bg-white">
-              <h6 class="dsc-title text-muted border-bottom pb-1">Description</h6>
+              <h6 class="dsc-title text-muted border-bottom pb-1">
+                Description
+              </h6>
               <div class="ml-4 " style="line-height:1.8">
                   {{task.description|linebreaks}}
+              </div>
+              <!-- Comment section -->
+              
+              <div class="comments pb-4">
+                <h5 class="comment-title text-muted border-bottom pb-1">
+                  comments
+                </h5>
+                  {% for d,cms in task.comments.items %}
+                    <h6 class="pt-4 text-muted border-bottom">
+                      Date :- {{d}}
+                    </h6>
+                    <div class="comments-content">
+                    <ul>
+                      {% for comment in cms %}
+                        <li>{{comment}}</li>
+                      {% endfor %}
+                    </ul>
+                    </div>
+                  {% endfor %}
+              </div>
+              
+                {% if task.comments.items|length > 0 %}
+                  <div class="border-bottom"></div>
+                {% endif %}
+              <!-- New comment section -->
+              <div class="m-4">
+                <form method="post">
+                  {{form_comment.as_p}}
+                  {%csrf_token%}
+                  <input type="hidden" name="task_id" value="{{pk}}">
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
               </div>
             </div>
           </div>
@@ -64,7 +100,7 @@
             <div class="container-fluid">
                 <form method="post">
                     {% csrf_token %}
-                    {{form.as_p}}
+                    {{form_task.as_p}}
                     <button type="submit" class="btn btn-primary">Submit</button>
                   </form>
             </div>
