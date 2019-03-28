@@ -1,6 +1,6 @@
 from django.db import models
 from django import forms
-from .models import Team,UserTasks
+from .models import Team,UserTasks,TaskComment
 from django.contrib.auth.models import User
 
 
@@ -11,11 +11,9 @@ class TaskCreationForm(forms.ModelForm):
             visible.field.widget.attrs['class'] = 'form-control'
         self.fields['task_title'].widget.attrs.update({"class":"form-control","placeholder":"Enter Title for task"})
         self.fields['task_description'].widget = forms.Textarea(attrs={"class":"form-control ","placeholder":"Enter Description for the task"})
-        self.fields['task_comments'].widget = forms.Textarea(attrs={"class":"form-control ","placeholder":"Comments for task","rows":"5"})
-        self.fields['task_comments'].required = False
     class Meta:
         model = UserTasks
-        fields =['task_title','task_description','task_comments']
+        fields =['task_title','task_description']
 
 class TeamCreationForm(forms.ModelForm):
     def __init__(self,*args,**kwargs):
@@ -33,3 +31,17 @@ class AddUserToTeam(forms.Form):
 
 class TeamTaskCreationForm(TaskCreationForm):
     assignee = forms.CharField(label="Assignee",widget=forms.TextInput(attrs={"class":'form-control','placeholder':'Assign the task to ?'}))
+
+class TaskCommentForm(forms.ModelForm):
+    
+    def __init__(self,*args,**kwargs):
+        a = {
+        'class':'form-control text-muted',
+        'placeholder':'Enter Your Comment',
+        'style':'font-size:15px' }
+        super(TaskCommentForm,self).__init__(*args,**kwargs)
+        self.fields['comment_content'].widget.attrs.update(a)
+        self.fields['comment_content'].label = ""
+    class Meta:
+        model = TaskComment
+        fields = ['comment_content']
