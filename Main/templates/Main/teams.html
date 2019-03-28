@@ -30,7 +30,7 @@
         <div class="task-team-view card" style="min-height:600px;">
             <div class="list-group">
               {% for pk,team_info in teams.items %}
-              <a href="{{team_info.name}}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center {% if selected_team|lower == team_info.name|lower %} active {% endif %}">
+              <a href="{{team_info.name}}?option=description" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center {% if selected_team|lower == team_info.name|lower %} active {% endif %}">
                 {{ team_info.name }}
                       <span class="badge badge-primary badge-pill bg-dark">{{team_info.unfinished_tasks}}</span>
                     </a>
