@@ -1,4 +1,3 @@
-Welcome to the fsf_2019_screening_task1!
 
 ## Task Manager is made with Django without using any pre-built third-party apps.
 
