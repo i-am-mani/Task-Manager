@@ -8,9 +8,11 @@
 <div class="card-title d-flex justify-content-center">
     <h4 class="display-5 border-bottom">
         {{title}}
-        <a type="button" data-toggle="modal" data-target="#addMemberModal">
-            <i class="fa fa-user-plus fa-2x" aria-hidden="true" style="right:4%;position: absolute;top:1%;"></i>
-        </a>
+        {% if position|lower == "creator" %}
+          <a type="button" data-toggle="modal" data-target="#addMemberModal">
+              <i class="fa fa-user-plus fa-2x" aria-hidden="true" style="right:4%;position: absolute;top:1%;" title="Create new team"></i>
+          </a>
+        {% endif %}
     </h4>
 </div>
 
@@ -19,7 +21,7 @@
 <!-- Member List -->
 <div class="list-group border-top" style="margin-top:5%;padding-top: 5%">
     {% for pk,member_name in team_members.items %}
-        <a href="#" class="list-group-item list-group-item-action">
+        <a href="../profile/{{member_name}}" target="_blank"class="list-group-item list-group-item-action">
             <i class="fa fa-user-circle fa-2x" aria-hidden="true"></i>
            <strong style="margin-left: 2%;margin-right: 10%;">{{member_name}}</strong>
         </a>
@@ -87,7 +89,7 @@
         <h4 class="display-5 border-bottom">
             {{title}}
             <a type="button" data-toggle="modal" data-target="#addMemberModal">
-                <i class="far fa-plus-square fa-2x" aria-hidden="true" style="right:4%;position: absolute;top:1%;"></i>
+                <i class="far fa-plus-square fa-2x" aria-hidden="true" style="right:4%;position: absolute;top:1%;" title="Add new task" data-toggle="tooltip"></i>
             </a>
         </h4>
     </div>
@@ -96,7 +98,7 @@
     
     <!-- Tasks List -->
     <div class="list-group border-top" style="margin-top:5%;padding-top: 5%">
-        <div class="accordion">
+        <div class="accordion" id="accordionTasks">
         {% for pk,task in team_tasks.items %}
         <div class="card">
                 <div class="card-header bg-white" id="heading_{{ forloop.counter }}">
@@ -109,24 +111,79 @@
                         <i class="fa fa-circle fa-1x mx-4 status-cricle" aria-hidden="true" style="color: rgb(223, 226, 27)"></i>
                       {% endif %}
                     </button>
+                    <span class="text-size-small">
+                        <!-- assigned by -->
+                        <span class="text-muted">By
+                          <a href="{% url 'profile' task.assigner %}">
+                            {{task.assigner}}
+                          </a>
+                        </span>
+                        <!-- Assigned to -->
+                          <span class="text-muted pl-4">To 
+                          <a href="{% url 'profile' task.assigner %}">
+                            {{task.assignee}}
+                          </a>         
+                        </span>
+
+                      </span>
+
+                    {% if task.assignee == user %}
                     <!-- Task Finished Button -->
                     <a href="{% url 'markTaskComplete'%}?pk={{pk}}" class="markTaskFinished" >
-                      <i class="fa fa-check fa-2x" aria-hidden="true" style="position: absolute;right:2%;" data-title = "{{ task.title }}"></i>
+                      <i class="fa fa-check fa-2x" aria-hidden="true" style="position: absolute;right:2%;" title="mark task complete" data-toggle="tooltip"></i>
                     </a>
-                    <!-- Task Finished Button -->
-                      
+                    {% endif %}
+                  {% if task.assigner == user %}
                   <!-- Task Edit Button -->
                   <a href="{% url 'edit_tasks' %}?pk={{pk}}" id="editTask">
-                    <i class="fas fa-edit fa-2x"  style="position: absolute; right:10%;"></i>
+                    <i class="fas fa-edit fa-2x"  style="position: absolute; right:10%;" title="Edit Task" data-toggle="tooltip"></i>
                   </a>
-                  <!-- Task Edit Button -->
+                  {% endif %}
+                
                   </h5>
       
                 </div>
             
-                <div id="collapse_{{ forloop.counter }}" class="collapse" data-parent="#accordionExample">
-                  <div class="card-body bg-light">
-                    {{task.description}}
+                <div id="collapse_{{ forloop.counter }}" class="collapse" data-parent="#accordionTasks">
+                <div class="card-body bg-light">
+                <h6 class="dsc-title text-muted border-bottom pb-1">
+                    Description
+                  </h6>
+                  <div class="ml-4 " style="line-height:1.8">
+                      {{task.description|linebreaks}}
+                  </div>
+                  <!-- Comment section -->
+                  
+                  <div class="comments pb-4">
+                    <h5 class="comment-title text-muted border-bottom pb-1">
+                      comments
+                    </h5>
+                      {% for d,cms in task.comments.items %}
+                        <h6 class="pt-4 text-muted border-bottom">
+                          Date :- {{d}}
+                        </h6>
+                        <div class="comments-content">
+                        <ul>
+                          {% for comment in cms %}
+                            <li>{{comment}}</li>
+                          {% endfor %}
+                        </ul>
+                        </div>
+                      {% endfor %}
+                  </div>
+                  
+                    {% if task.comments.items|length > 0 %}
+                      <div class="border-bottom"></div>
+                    {% endif %}
+                  <!-- New comment section -->
+                  <div class="m-4">
+                    <form method="post">
+                      {{form_comment.as_p}}
+                      {%csrf_token%}
+                      <input type="hidden" name="task_id" value="{{pk}}">
+                      <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                  </div>
                   </div>
                 </div>
               </div>
@@ -136,7 +193,7 @@
 
  
     
-    <!-- add task Modal -->
+    <!-- Add new task Modal -->
     <div class="modal fade" id="addMemberModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
