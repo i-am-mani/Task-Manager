@@ -21,10 +21,10 @@ Features (Team Tasks) :-
 
 
 Requirements:-
-python 3.6+
-django 2.x
+* python 3.6+
+* django 2.x
 
-
+**Note:- run `python manage.py migrate --run-syncdb` when running the app for first time**
 
 ***
 
