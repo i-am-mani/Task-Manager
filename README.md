@@ -10,6 +10,7 @@ Features (Personal Tasks) :-
 * Edit Tasks.
 * Mark Tasks as complete.
 
+
 Features (Team Tasks) :- 
 * Any authenticated user could create team.
 * Only the creator of a team can add authenticated users to their team.
@@ -42,7 +43,7 @@ Example :-
 
 5. Personal Task Creation
 
-![Create new personal task](https://github.com/llGOKUll/fsf_2019_screening_task1/blob/master/example-pics/new_task.jpg)
+![Create new personal task](https://github.com/llGOKUll/fsf_2019_screening_task1/blob/master/example-pics/new_user_task.jpg)
 
 
 6.  Personal Tasks page
@@ -69,4 +70,4 @@ Example :-
 
 11. Team Task creation
 
-![Team task creation](https://github.com/llGOKUll/fsf_2019_screening_task1/blob/master/example-pics/task_creation_team.jpg)
+![Team task creation](https://github.com/llGOKUll/fsf_2019_screening_task1/blob/master/example-pics/new_task_team.png)
