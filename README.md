@@ -20,6 +20,12 @@ Features (Team Tasks) :-
 * Assignee of the task can mark the task complete.
 
 
+Requirements:-
+python 3.6+
+django 2.x
+
+
+
 ***
 
 Example :- 
