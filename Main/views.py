@@ -1,6 +1,7 @@
-from django.shortcuts import render, redirect, HttpResponse, reverse,get_object_or_404
-from .models import Team, UserTasks,TaskComment
-from .forms import (TeamCreationForm,TeamTaskCreationForm,TaskCreationForm,AddUserToTeam,TaskCommentForm)
+from django.shortcuts import render, redirect, HttpResponse, reverse, get_object_or_404
+from .models import Team, UserTasks, TaskComment
+from .forms import (TeamCreationForm, TeamTaskCreationForm,
+                    TaskCreationForm, AddUserToTeam, TaskCommentForm)
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.db import models
@@ -16,27 +17,28 @@ def CreateUserTasks(request):
         Return Task creation form
     """
     if request.method == 'POST':
-        form = TaskCreationForm(request.POST,prefix="createUserTask")
+        form = TaskCreationForm(request.POST, prefix="createUserTask")
         if form.is_valid():
-            # gets the model object, which is in memory but not saved in database yet. 
+            # gets the model object, which is in memory but not saved in database yet.
             # #https://stackoverflow.com/questions/12848605/django-modelform-what-is-savecommit-false-used-for
-            obj = form.save(commit=False)  
+            obj = form.save(commit=False)
             obj.task_assignee = request.user
             obj.task_assigner = request.user
             obj.save()
-            messages.success(request,"New task has been added")
+            messages.success(request, "New task has been added")
             return TaskCreationForm(prefix="createUserTask")
     else:
         form = TaskCreationForm(prefix="createUserTask")
     return form
+
 
 def CreateCommentOnTask(request):
     """
         return Comment form.
     """
     if request.method == 'POST':
-        task_id = request.POST.get('task_id','')
-        form = TaskCommentForm(request.POST,prefix="taskCommentForm")
+        task_id = request.POST.get('task_id', '')
+        form = TaskCommentForm(request.POST, prefix="taskCommentForm")
         if form.is_valid():
             form_obj = form.save(commit=False)
             form_obj.save()
@@ -44,7 +46,7 @@ def CreateCommentOnTask(request):
             task = UserTasks.objects.get(pk=task_id)
             task.task_comments.add(form_obj)
             task.save()
-            messages.success(request,"Comment Added!")
+            messages.success(request, "Comment Added!")
             return TaskCommentForm(prefix="taskCommentForm")
     else:
         form = TaskCommentForm(prefix="taskCommentForm")
@@ -62,13 +64,13 @@ def ViewUserTasks(request):
     tasksDescription = getTaskInfo(request, assignee=request.user)
 
     context = {
-        "tasks":tasksDescription,
-        "form_task":form_user_task,
-        "form_comment":form_task_comment }
-    return render(request, 'Main/view_tasks.html',context)
+        "tasks": tasksDescription,
+        "form_task": form_user_task,
+        "form_comment": form_task_comment}
+    return render(request, 'Main/view_tasks.html', context)
 
 
-def getTaskInfo(request,team = None,assignee = None):
+def getTaskInfo(request, team=None, assignee=None):
     """
         Return all the tasks of the assignee's or teams's,
         data as dictionary, each task is stored with key 
@@ -82,17 +84,17 @@ def getTaskInfo(request,team = None,assignee = None):
             task_description(Dictionary):{pk:{title:"__",dsc:"__",status:"__"}}
 
     """
-    tasksDescription = {} #stores primary key as Key of Task,and task's title,dsc,status in form of dictionary as Value
+    tasksDescription = {}  # stores primary key as Key of Task,and task's title,dsc,status in form of dictionary as Value
     if team == None:
-        print("Assignee is correct")
-        tasks = UserTasks.objects.filter(task_assignee = assignee )
+
+        tasks = UserTasks.objects.filter(task_assignee=assignee)
     elif assignee == None:
-        tasks = UserTasks.objects.filter(task_team = team)
-    print(tasks)
+        tasks = UserTasks.objects.filter(task_team=team)
+
     for task in tasks:
         tempDict = {}
         title = task.task_title
-        desc = task.task_description 
+        desc = task.task_description
         status = task.task_status
         assigner = task.task_assigner
         assignee = task.task_assignee
@@ -112,7 +114,7 @@ def getTaskInfo(request,team = None,assignee = None):
                     commentDict[comment_date].append(comment_content)
                 else:
                     commentDict[comment_date] = [comment_content]
-            
+
         tempDict['comments'] = commentDict
 
         tasksDescription[task.pk] = tempDict
@@ -131,17 +133,19 @@ def EditTasks(request):
             render(): rendering edit_tasks.html and editTaskForm as the context.
     """
     _pk = request.GET.get('pk')
-    task = UserTasks.objects.get(pk= _pk)
-    editTaskForm = TaskCreationForm(instance = task,prefix="editTaskForm")
+    task = UserTasks.objects.get(pk=_pk)
+    editTaskForm = TaskCreationForm(instance=task, prefix="editTaskForm")
 
-    if( request.method == 'POST'):
-        editTaskForm = TaskCreationForm(request.POST,instance = task,prefix="editTaskForm")
+    if(request.method == 'POST'):
+        editTaskForm = TaskCreationForm(
+            request.POST, instance=task, prefix="editTaskForm")
         if(editTaskForm.is_valid()):
             editTaskForm.save()
             messages.success("Task Has been edited Successfuly")
             return redirect("/ViewTasks/")
 
-    return render(request,"Main/edit_tasks.html",{"form":editTaskForm})
+    return render(request, "Main/edit_tasks.html", {"form": editTaskForm})
+
 
 def task_mark_status_complete(request):
     """
@@ -152,8 +156,8 @@ def task_mark_status_complete(request):
     task_pk = request.GET.get('pk')
     task = UserTasks.objects.get(pk=task_pk)
     task.task_status = 'done'
-    task.save() 
-    messages.success(request,"The Task has been marked as complete!")
+    task.save()
+    messages.success(request, "The Task has been marked as complete!")
     return ViewUserTasks(request)
 
 
@@ -163,7 +167,7 @@ def teams(request, team_name):
         Render the Team page.
     """
     team_info, form = team_home(request)
-    option = request.GET.get("option","")
+    option = request.GET.get("option", "")
     team_description = {}
     team_members = {}
     team_tasks = {}
@@ -171,7 +175,7 @@ def teams(request, team_name):
     add_task_form = {}
     team_desc = {}
     form_comment = {}
-    position = "member" 
+    position = "member"
 
     if team_name != 'home':
         team = Team.objects.get(name=team_name)
@@ -180,8 +184,9 @@ def teams(request, team_name):
             team_description = team.description
             mem_count = team.members.all().count()
             ts_count = UserTasks.objects.filter(task_team=team).count()
-            team_desc = {"team_description": team_description, "mem_count": mem_count, "ts_count": ts_count}
-            
+            team_desc = {"team_description": team_description,
+                         "mem_count": mem_count, "ts_count": ts_count}
+
         elif option == "tasks":
             team_tasks = getTaskInfo(request, team=team)
             add_task_form = add_task_from_team(request, team)
@@ -193,21 +198,22 @@ def teams(request, team_name):
             for member in members:
                 team_members[member.pk] = member.username
             add_member_form = add_member_to_team(request, team)
-        
+
     context = {
-            "teams": team_info,  # consist of all team's name,desc,unfinished tasks
-            "form": form,   # Form for creating new Team 
-            "title": option.capitalize(),  # Selected option for a specific team
-            "team_tasks": team_tasks,  # dictionary of all tasks belonging to a team
-            "team_members": team_members,  # member list of the team
-            "add_member_form": add_member_form,  # For for adding new member to team
-            "selected_team": team_name,  # Selected team's name
-            "add_task_form": add_task_form,  # Form for creating new Task
-            "team_desc": team_desc,  # Consists of Teams description,consits of selected team's description,member and task count 
-            "form_comment": form_comment,  # Form for Commenting on task
-            "position":position
-            }
-    return render(request, "Main/team_content.html",context)
+        "teams": team_info,  # consist of all team's name,desc,unfinished tasks
+        "form": form,   # Form for creating new Team
+        "title": option.capitalize(),  # Selected option for a specific team
+        "team_tasks": team_tasks,  # dictionary of all tasks belonging to a team
+        "team_members": team_members,  # member list of the team
+        "add_member_form": add_member_form,  # For for adding new member to team
+        "selected_team": team_name,  # Selected team's name
+        "add_task_form": add_task_form,  # Form for creating new Task
+        # Consists of Teams description,consits of selected team's description,member and task count
+        "team_desc": team_desc,
+        "form_comment": form_comment,  # Form for Commenting on task
+        "position": position
+    }
+    return render(request, "Main/team_content.html", context)
 
 
 def team_home(request):
@@ -215,31 +221,33 @@ def team_home(request):
         return teams and unfinished tasks count. 
     """
     teams = Team.objects.filter(members__in=[request.user])
-    team_info = {} # store the team name and its description with key as team's primary key.
-    for team in teams: 
+    # store the team name and its description with key as team's primary key.
+    team_info = {}
+    for team in teams:
         unfinished_tasks = 0
-        _dict = {} 
+        _dict = {}
         _dict["name"] = team.name
         _dict["description"] = team.description
-        _task = UserTasks.objects.filter(task_team=team )
+        _task = UserTasks.objects.filter(task_team=team)
         for t in _task:
-            if t.task_status!='done':
-                unfinished_tasks+=1
-        _dict["unfinished_tasks"]=unfinished_tasks
+            if t.task_status != 'done':
+                unfinished_tasks += 1
+        _dict["unfinished_tasks"] = unfinished_tasks
         team_info[team.pk] = _dict
     if request.method == "POST":
-        form = TeamCreationForm(request.POST,prefix="teamCreationForm")
+        form = TeamCreationForm(request.POST, prefix="teamCreationForm")
         if form.is_valid():
             db_instance = form.save(commit=False)
             db_instance.creator = request.user
             db_instance.save()
             db_instance.members.add(request.user)
-            messages.success(request,"Team has been successfully created")
-    else:        
+            messages.success(request, "Team has been successfully created")
+    else:
         form = TeamCreationForm(prefix="teamCreationForm")
-    return team_info,form
+    return team_info, form
 
-def add_member_to_team(request,team):
+
+def add_member_to_team(request, team):
     """
         Add User with valid Username as member of the team. 
 
@@ -248,20 +256,22 @@ def add_member_to_team(request,team):
         Return:
             Form(AddUserToTeam): Return AddUserToTeam form 
     """
-    if(request.method =='POST'):
-        form = AddUserToTeam(request.POST,prefix="addUserToTeam")
+    if(request.method == 'POST'):
+        form = AddUserToTeam(request.POST, prefix="addUserToTeam")
         if(form.is_valid()):
-            un=form.cleaned_data['member_username']
+            un = form.cleaned_data['member_username']
             if(User.objects.filter(username=un).exists()):
                 team.members.add(User.objects.get(username=un))
             else:
-                messages.error(request,"Failed to add member : Please check the Username and try again")
+                messages.error(
+                    request, "Failed to add member : Please check the Username and try again")
 
     else:
-        form = AddUserToTeam(prefix = "addUserToTeam")
+        form = AddUserToTeam(prefix="addUserToTeam")
     return form
 
-def add_task_from_team(request,team):
+
+def add_task_from_team(request, team):
     """
         Handle Task creation from Team. Uses TeamTaskCreationForm, 
         Create and assign the task to valid user.
@@ -270,16 +280,17 @@ def add_task_from_team(request,team):
             team(Team): The Assigner of the task.
         Return:
             form(TeamTaskCreationForm)
-            
+
     """
     if(request.method == 'POST'):
-        # Prefix is used to avoid POST data collision of different forms, since 
+        # Prefix is used to avoid POST data collision of different forms, since
         # single request is used to process many Forms.
-        form = TeamTaskCreationForm(request.POST,prefix = "addTaskFromTeam")
-        
+        form = TeamTaskCreationForm(request.POST, prefix="addTaskFromTeam")
+        print(request.POST)
         if(form.is_valid()):
             assignee = form.cleaned_data['assignee']
             # Get the Database object without commiting
+            print(form.cleaned_data['task_description'])
             obj = form.save(commit=False)
             obj.task_assigner = request.user
             obj.task_team = team
@@ -291,20 +302,22 @@ def add_task_from_team(request,team):
                     obj.task_assignee = user
                     obj.save()
                 else:
-                    messages.error(request,"The User doesn't belong to this team")
+                    messages.error(
+                        request, "The User doesn't belong to this team")
             else:
-                messages.error(request,"The Assignee Usename is incorrect!")
+                messages.error(request, "The Assignee Usename is incorrect!")
     else:
         form = TeamTaskCreationForm(prefix="addTaskFromTeam")
     return form
 
+
 @login_required()
-def profile(request,user_name):
+def profile(request, user_name):
     """
         Render Profile Page.
     """
     user_profile = {}
-    user = get_object_or_404(User,username=user_name)
+    user = get_object_or_404(User, username=user_name)
 
     if user:
         user_profile["Username"] = user.username
@@ -313,11 +326,12 @@ def profile(request,user_name):
         user_profile["Email"] = user.email
 
         team_db = request.user.team_set.all()  # All the team in which user is member
-        team_db_creator = request.user.creator.all()  # All the team in which user is creator
+        # All the team in which user is creator
+        team_db_creator = request.user.creator.all()
         user_teams = {}
         for team in team_db:
             user_teams[team.name] = "member"
         for team in team_db_creator:
             user_teams[team.name] = "creator"
-        return render(request,"Main/profile.html",{"user_profile":user_profile,"user_teams":user_teams})
+        return render(request, "Main/profile.html", {"user_profile": user_profile, "user_teams": user_teams})
     return user
