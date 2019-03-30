@@ -2,6 +2,8 @@
 
 {% block team_content %}
 
+
+
 {% if title|lower == "members" %}
 
 <!-- Member Page Title -->
@@ -88,8 +90,8 @@
 <div class="card-title d-flex justify-content-center">
         <h4 class="display-5 border-bottom">
             {{title}}
-            <a type="button" data-toggle="modal" data-target="#addMemberModal">
-                <i class="far fa-plus-square fa-2x" aria-hidden="true" style="right:4%;position: absolute;top:1%;" title="Add new task" data-toggle="tooltip"></i>
+            <a  type="button" data-toggle="modal" data-target="#addMemberModal">
+                <i id="loadToolbar-modal" class="far fa-plus-square fa-2x" aria-hidden="true" style="right:4%;position: absolute;top:1%;" title="Add new task" data-toggle="tooltip"></i>
             </a>
         </h4>
     </div>
@@ -126,6 +128,7 @@
                         </span>
 
                       </span>
+                    
 
                     {% if task.assignee == user %}
                     <!-- Task Finished Button -->
@@ -150,7 +153,10 @@
                     Description
                   </h6>
                   <div class="ml-4 " style="line-height:1.8">
-                      {{task.description|linebreaks}}
+                    {% autoescape off %}
+                    {{task.description|linebreaks}}
+                    {% endautoescape %}
+
                   </div>
                   <!-- Comment section -->
                   
@@ -187,15 +193,15 @@
                   </div>
                 </div>
               </div>
+              {% endfor %}
             </div>
-        {% endfor %}
     </div>
 
  
     
     <!-- Add new task Modal -->
     <div class="modal fade" id="addMemberModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Add new task</h5>
@@ -204,10 +210,21 @@
                         </button>
                 </div>
                 <div class="modal-body">
-                    <form method="post">
-                            {% csrf_token %}
-                            {{ add_task_form.as_p }}
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                    <form method="post" id="TaskForm">
+                            {% csrf_token %}                                                               
+                            {% for field in add_task_form %}
+                              <label for="{{field.label}}">{{field.label}}</label>
+                              {% if field.html_name == "addTaskFromTeam-task_description" %}
+                              <div class="editor" contenteditable="true" style="height: 300px">
+                              </div>
+                              <input type="hidden" cols="40" rows="15"  name="{{field.html_name}}" id="{{field.id_for_label}}" class="form-control descArea">
+                              {% else %}
+                              <input type="text"  name="{{field.html_name}}" id="{{field.id_for_label}}" class="form-control" placeholder="Enter {{field.label}}" aria-describedby="helpId">
+                              {% endif %}
+                              <small id="helpId" class="text-muted">{{field.help_text}}</small>
+                            {% endfor %}      
+                            <!-- {{add_task_form.as_p}} -->
+                            <button type="submit" class="btn btn-primary" id='submitTask'>Submit</button>
                     </form>
                 </div>
             </div>
